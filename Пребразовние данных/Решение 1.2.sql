@@ -11,14 +11,12 @@ USE master;
 GO
 
 --создаю БД
-CREATE DATABASE sber;
+CREATE DATABASE Tasks;
 */
 
 --выбираю БД для работы
-use sber;
+use Tasks;
 GO
-
-DROP TABLE Test
 
 --Создаю таблицу
 CREATE TABLE Test
