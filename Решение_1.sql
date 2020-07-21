@@ -82,10 +82,11 @@ FROM PDCL p
         Deal, --номер договора
         SUM(Sum) Overdue_amount, --общая сумма просрочки
         MIN(Date) Start_overdue, --дата начала просрочки
-        DATEDIFF(day, GETDATE(), MIN(Date)) Count_days_delay_in_payment
+        DATEDIFF(day, MIN(Date), GETDATE()) Count_days_delay_in_payment
     --количество дней просрочки (начиная от даты выхода на просрочку до текущей даты)
     FROM PDCL
     GROUP BY Deal
     HAVING SUM(Sum)>0) p2
     ON p.Deal = p2.Deal
+
 

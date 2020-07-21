@@ -1,4 +1,4 @@
-----Задачча 1.2----
+----Задача 2----
 --Условие:
 /*
 В таблице хранятся сведения  о еженедельных продажах продукта.
@@ -84,7 +84,30 @@ WHERE
 ELSE (7 - DATEPART (day, Дата)) * (Сумма/7) END) > 0
 */
 
+
+--Решение через табличное выражение СТЕ
+/*
+WITH SumMonth AS (SELECT
+EOMONTH (Дата) Дата,
+CASE WHEN EOMONTH(DATEADD(day, -6, Дата)) = EOMONTH (Дата) THEN Сумма
+ELSE DATEPART (day, Дата) * (Сумма/7)
+END Итого
+From Test
+--объединяю данные
+UNION ALL
+SELECT
+EOMONTH(DATEADD(day, -6, Дата)) Дата,
+CASE WHEN EOMONTH(DATEADD(day, -6, Дата)) = EOMONTH (Дата) THEN 0
+ELSE (7 - DATEPART (day, Дата)) * (Сумма/7)
+END Итого
+FROM Test) SELECT Дата, round(SUM(Итого), 2) Сумма
+FROM SumMonth
+GROUP BY Дата
+*/
+
+
 --для удобства работы создаю представление на основе 2 предыдущих выборок
+--решение через представление
 CREATE VIEW Summary AS
 SELECT
 EOMONTH (Дата) Дата,
@@ -102,7 +125,8 @@ END Итого
 FROM Test
 
 --получаю сумму продаж на конец месяца(агрегирую по сумме продаж и группирую по дате)
-SELECT Дата, SUM(Итого) Сумма
+SELECT Дата, round(SUM(Итого), 2) Сумма
 FROM Summary
 GROUP BY Дата
+
 
